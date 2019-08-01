@@ -13,6 +13,10 @@ jobs:
 
       - checkout
 
+      - run:
+          name: "CACHE_VERSION ?"
+          command: echo ${CACHE_VERSION}
+
       # Download and cache dependencies
       - restore_cache:
           keys:
