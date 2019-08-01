@@ -13,23 +13,19 @@ jobs:
 
       - checkout
 
-      - run:
-          name: "CACHE_VERSION ?"
-          command: echo ${CACHE_VERSION}
-
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - ${CACHE_VERSION}-dependencies-{{ checksum "pom.xml" }}
+            - {{ .Environment.CACHE_VERSION }}-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
-            - ${CACHE_VERSION}-dependencies-
+            - {{ .Environment.CACHE_VERSION }}-dependencies-
 
       - run: mvn clean package # run the actual tests
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
-          key: ${CACHE_VERSION}-dependencies-{{ checksum "pom.xml" }}
+          key: {{ .Environment.CACHE_VERSION }}-dependencies-{{ checksum "pom.xml" }}
 
 
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
