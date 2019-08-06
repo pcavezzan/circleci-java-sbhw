@@ -27,17 +27,15 @@ jobs:
             - ~/.m2
           key: v2-dependencies-{{ checksum "pom.xml" }}
 
-
       - run:
           name: Save test results
           command: |
             mkdir -p ~/test-results/surefire/
             find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/surefire/ \;
-            awk 'FNR>1' ~/test-results/surefire/*.xml > ~/test-results/maven-surefire.xml
-            rm ~/test-results/surefire/*.xml
-            mv ~/test-results/maven-surefire.xml ~/test-results/surefire/report.xml
           when: always
 
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: ~/test-results
+      - store_test_results:
+        path: ~/test-results
+
+      - store_artifacts:
+          path: ~/test-results/surefire
