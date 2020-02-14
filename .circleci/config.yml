@@ -39,3 +39,39 @@ jobs:
 
       - store_artifacts:
           path: ~/test-results/surefire
+  
+  demo-deploy:
+    docker:
+    - image: zenikalabs/rancher-cli
+    
+    working_directory: ~/circleci-java-sbhw
+    
+    steps:
+      - attach_workspace:
+          at: ~/circleci-java-sbhw
+
+      - run:
+        name: Echo hello world
+        command: |
+          echo "Hello World after manual approval"
+
+
+workflows:
+  version: 2 
+  
+  my_workflow:
+    jobs:
+      - build
+      - hold:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - demo-deploy:
+          requires:
+            - hold # manual approval required via the CircleCI UI to run the live-deploy job
+          filters:
+            branches:
+              only: master
