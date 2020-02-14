@@ -63,7 +63,10 @@ workflows:
   
   my_workflow:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
       - hold:
           type: approval
           requires:
